@@ -266,14 +266,14 @@
 				const urlParams = new URLSearchParams(window.location.search);
 				const paramValue = urlParams.get('logs');
 				const add = JSON.parse(paramValue)
-				console.log("小程序中传过来的值",add)
+				console.log("小程序中传过来的值",add.user.avatarUrl)
 				console.log("性别")
 				if (paramValue === null) {
 					paramValue = '没有获取到参数值';
 				}
 				const box = document.getElementById("box");
 				if (box) {
-					box.innerHTML = '获取到的数据为' + paramValue;
+					box.innerHTML = '获取到的数据为' + add.;
 					console.log(box.innerHTML);
 				} else {
 					console.log('未找到 id 为 box 的元素');
