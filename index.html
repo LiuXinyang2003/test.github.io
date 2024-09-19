@@ -266,7 +266,7 @@
 				const urlParams = new URLSearchParams(window.location.search);
 				const paramValue = urlParams.get('logs');
 				const add = JSON.parse(paramValue)
-				let avatarUrl = add.user.avatarUrl
+				window.globalVariable = add.user.avatarUrl
 				console.log("小程序中传过来的值",add.user.avatarUrl)
 				console.log("性别")
 				if (paramValue === null) {
@@ -435,32 +435,32 @@
 				chatList.push(msg);
 				console.log(chatList);
 
-				axios.post('http://192.168.1.31:3000/api/AImodels/search1', {
-						searchData: message
-					})
-					.then(response => {
-						//console.log(response.data.data);
-						answer = {
-							date1: now1 + '-' + now2 + ' ' + hour + ':' + minu,
-							date: response.data.data.date,
-							type: 'custom',
-							msgId: response.data.data.msgId,
-							nickname: response.data.data.nickname,
-							avatar: response.data.data.avatar,
-							message: response.data.data.message
-						}
-						console.log(answer);
-						chatList.push(answer);
-						console.log(chatList);
-						renderChat();
-						chatDisplay.scrollTop = chatDisplay.scrollHeight;
+				// axios.post('http://192.168.1.31:3000/api/AImodels/search1', {
+				// 		searchData: message
+				// 	})
+				// 	.then(response => {
+				// 		//console.log(response.data.data);
+				// 		answer = {
+				// 			date1: now1 + '-' + now2 + ' ' + hour + ':' + minu,
+				// 			date: response.data.data.date,
+				// 			type: 'custom',
+				// 			msgId: response.data.data.msgId,
+				// 			nickname: response.data.data.nickname,
+				// 			avatar: response.data.data.avatar,
+				// 			message: response.data.data.message
+				// 		}
+				// 		console.log(answer);
+				// 		chatList.push(answer);
+				// 		console.log(chatList);
+				// 		renderChat();
+				// 		chatDisplay.scrollTop = chatDisplay.scrollHeight;
 
-						// 清空输入框
-						messageInput.value = '';
-					})
-					.catch(error => {
-						console.error('Error:', error);
-					});
+				// 		// 清空输入框
+				// 		messageInput.value = '';
+				// 	})
+				// 	.catch(error => {
+				// 		console.error('Error:', error);
+				// 	});
 
 				// renderChat();
 				// chatDisplay.scrollTop = chatDisplay.scrollHeight;
@@ -751,14 +751,16 @@
 				hour = hour < 10 ? "0" + hour : hour;
 				minu = minu < 10 ? "0" + minu : minu;
 				sec = sec < 10 ? "0" + sec : sec;
-
+				
+				// console.log(avatarUrl)
+				
 				question = {
 					date1: now1 + '-' + now2 + ' ' + hour + ':' + minu,
 					date: now1 + '-' + now2 + ' ' + hour + ':' + minu + ':' + sec,
 					type: 'normal',
 					msgId: 1,
 					nickname: '自己',
-					avatar: 'https://image.yuanqilian.com:4443/99ef9ec248bd4c406fcec7097632f80d',
+					avatar: window.globalVariable,
 					message: `${element}`
 				}
 				console.log(question);
