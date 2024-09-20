@@ -38,19 +38,7 @@
 				flex-direction: row;
 			}
 
-			.staticImg {
-				position: relative;
-				height: 100%;
-				width: 100px;
-			}
-
-			.staticImg img {
-				height: 100%;
-				width: 100px;
-			}
-
 			.list-container {
-				height: 100%;
 				display: flex;
 				flex-direction: column;
 				justify-content: center;
@@ -218,65 +206,42 @@
 				background-color: #ff3b30;
 			}
 
-			#loadingScreen {
-				position: fixed;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				background-color: #fff;
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: center;
-			}
-
-			h1 {
-				font-size: 24px;
-				margin-bottom: 20px;
-			}
-
-			.progress-bar {
-				width: 200px;
-				height: 20px;
-				background-color: #eee;
-				border-radius: 10px;
-				overflow: hidden;
-			}
-
-			.progress-bar div {
-				height: 100%;
-				background-color: #007bff;
-				width: 0%;
-				transition: width 0.5s ease-in-out;
+			#journeyButton {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				padding: 15px 30px;
+				font-size: 20px;
+				background-color: #4CAF50;
+				color: white;
+				border: none;
+				border-radius: 5px;
+				z-index: 999;
 			}
 		</style>
 	</head>
 	<body>
 		<!-- <button onclick="start()">开启</button> <br> -->
 		<!-- 获取授权信息 -->
-		<button onclick="start1()">开启</button>
-		<!-- 		<button onclick="stop1()">关闭</button> <br>
+<!-- 		<button onclick="stop1()">关闭</button> <br>
 		<div id="box" style="height='100px';color='black';">获取到的数据为</div> -->
 		<input id="signature" type="text" placeholder="签名" style="display:none;">
 		<br>
 		<input id="projectId" type="text" placeholder="项目ID" style="display:none;">
 
 		<!-- 实际数据 -->
-		<div id="loadingScreen" style="display:none;">
-			<h1>加载中...</h1>
-			<div class="progress-bar">
-				<div></div>
-			</div>
-		</div>
 
-		<div class="chat-container" style="display:none;">
+		<div class="chat-container">
+
+			<button id="journeyButton" onclick="start1()">开启数字人之旅</button>
 			<div>
 				<input id="subscriptionKeyInput" value="" type="text" style="display:none;" />
 			</div>
 
+
 			<!-- 对话框内容 -->
-			<div class="chat-display">
+			<div class="chat-display" style="display:none;">
 				<!-- 对话展示框将在这里 -->
 				<div class="scroll-list">
 
@@ -284,21 +249,16 @@
 			</div>
 			<div class="part2">
 				<!-- AI机器人 -->
-
-				<div class="staticImg">
-					<img id="myImage" src="https://image.yuanqilian.com:4443/64262311146da8fefcfd927937a9e864"
-						alt="An image">
-				</div>
 				<div class="box" style="height: 100%;width: 100px;">
 				</div>
 				<!-- 推荐问题 -->
-				<div class="list-container">
+				<div class="list-container" style="display:none;">
 					<div id="dataContainer"></div>
 					<button id="nextBatch">换一批</button>
 				</div>
 			</div>
 			<!-- 输入内容，输入框输入及语音输入 -->
-			<div class="chat-input">
+			<div class="chat-input" style="display:none;">
 				<!-- <input type="text" id="message-input" placeholder="请输入内容"> -->
 				<div class="message-input" contenteditable="true"></div>
 				<button onclick="submit()">发送</button>
@@ -458,10 +418,8 @@
 			// const submitBtn = document.getElementById('submit-btn');
 			const chatDisplay = document.querySelector('.chat-display');
 
-			document.getElementById('myImage').addEventListener('click', function() {
-				this.style.display = 'none';
-				// document.getElementById('replacementElement').style.display = 'block';
-			});
+			// 添加事件监听器
+			// submitBtn.addEventListener('click', sendMessage);
 
 
 			// 定义函数：发送消息
@@ -683,19 +641,12 @@
 				})
 			}
 			const start1 = (e) => {
-				document.getElementById('loadingScreen').style.display = 'block';
-				let progress = 0;
-				const interval = setInterval(() => {
-					progress += 10;
-					document.querySelector('.progress-bar div').style.width = progress + '%';
-					if (progress >= 100) {
-						clearInterval(interval);
-						document.getElementById('loadingScreen').style.display = 'none';
-
-					}
-				}, 500);
-				document.querySelector('.chat-container').style.display = 'block';
 				//signature获取通过/openapi/signature/gen，详见API接⼊说明文档
+				
+				document.getElementById('journeyButton').style.display = 'none';
+				document.querySelector('.list-container').style.display = 'block';
+				document.querySelector('.chat-input').style.display = 'block';
+				document.querySelector('.chat-display').style.display = 'block';
 				var signature = document.getElementById('signature').value;
 				var projectId = document.getElementById('projectId').value;
 				if (!signature || !projectId) {
