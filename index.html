@@ -263,17 +263,11 @@
 				<div class="message-input" contenteditable="true"></div>
 				<button onclick="submit()">发送</button>
 				<button class="mic-button" id="start">
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-						<path
-							d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1 17v-6h2v6h5v-8h3l-5-5-5 5h3v8h-5z" />
-					</svg>
+					<div>语音输入</div>
 				</button>
-				<span class="recognizing hide" id="recognizing">识别中...</span>
+				<!-- <span class="recognizing hide" id="recognizing">识别中...</span> -->
 				<button class="mic-button end_btn" id="end">
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-						<path
-							d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.375 15.625l-3.5-3.5 1.4-1.4 2.1 2.1 4.9-4.9 1.4 1.4-6.3 6.3z" />
-					</svg>
+					<div>结束语音</div>
 				</button>
 			</div>
 		</div>
@@ -622,6 +616,8 @@
 		</script>
 		<script>
 			const stop1 = (e) => {
+				var signature = document.getElementById('signature').value;
+				var projectId = document.getElementById('projectId').value;
 				// 小程序页面销毁关闭
 				const WeixinJSBridge = window.WeixinJSBridge
 				if (!WeixinJSBridge) return
@@ -645,7 +641,7 @@
 				
 				document.getElementById('journeyButton').style.display = 'none';
 				document.querySelector('.list-container').style.display = 'block';
-				document.querySelector('.chat-input').style.display = 'block';
+				document.querySelector('.chat-input').style.display = 'flex';
 				document.querySelector('.chat-display').style.display = 'block';
 				var signature = document.getElementById('signature').value;
 				var projectId = document.getElementById('projectId').value;
