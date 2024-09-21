@@ -219,12 +219,33 @@
 				border-radius: 5px;
 				z-index: 999;
 			}
+
+
+			h1 {
+				font-size: 24px;
+				margin-bottom: 20px;
+			}
+
+			.progress-bar {
+				width: 200px;
+				height: 20px;
+				background-color: #eee;
+				border-radius: 10px;
+				overflow: hidden;
+			}
+
+			.progress-bar div {
+				height: 100%;
+				background-color: #007bff;
+				width: 0%;
+				transition: width 0.5s ease-in-out;
+			}
 		</style>
 	</head>
 	<body>
 		<!-- <button onclick="start()">开启</button> <br> -->
 		<!-- 获取授权信息 -->
-<!-- 		<button onclick="stop1()">关闭</button> <br>
+		<!-- 		<button onclick="stop1()">关闭</button> <br>
 		<div id="box" style="height='100px';color='black';">获取到的数据为</div> -->
 		<input id="signature" type="text" placeholder="签名" style="display:none;">
 		<br>
@@ -237,6 +258,13 @@
 			<button id="journeyButton" onclick="start1()">开启数字人之旅</button>
 			<div>
 				<input id="subscriptionKeyInput" value="" type="text" style="display:none;" />
+			</div>
+
+			<div id="loadingScreen" style="display:none;">
+				<h1>加载中...</h1>
+				<div class="progress-bar">
+					<div></div>
+				</div>
 			</div>
 
 
@@ -322,6 +350,13 @@
 				// }
 			];
 
+
+			var taskId = 0;
+
+			const inputList = []
+
+
+
 			const login = {
 				id: 1
 			};
@@ -329,9 +364,38 @@
 			// 渲染函数
 			const renderedMessages = [];
 
+
+
+			function initChat() {
+				const scrollList = document.querySelector('.scroll-list');
+				
+				mainElement =
+					`<div class="row" style="height: auto;">
+					<div class="head-friend">
+						<img class="avatar" src="">
+					</div>
+					<div>
+						<div class="AInick">就将计就计/div>
+						<div class="message msg-friend">
+							<div><span>我的任务是</span></div>
+						</div>
+					</div>
+				</div>`;
+				const chatItem = `${mainElement}`;
+
+				scrollList.innerHTML += chatItem;
+
+
+			}
+
+			function inputChat() {
+				const spanElement = document.querySelector('.msg-friend div span');
+				// 在已有内容基础上添加新内容
+				spanElement.textContent += ' Additional content added here.';
+			}
+
 			function renderChat() {
 				const scrollList = document.querySelector('.scroll-list');
-
 				console.log("带使用的值", chatList)
 				chatList.forEach((item, index) => {
 					if (!renderedMessages.includes(item.date)) {
@@ -375,6 +439,7 @@
 								</div>
 							</div>`;
 						}
+
 						const chatItem = `${dateElement}${customElement}${mainElement}`;
 
 						scrollList.innerHTML += chatItem;
@@ -638,11 +703,21 @@
 			}
 			const start1 = (e) => {
 				//signature获取通过/openapi/signature/gen，详见API接⼊说明文档
-				
+
+				document.getElementById('loadingScreen').style.display = 'block';
+				let progress = 0;
+				const interval = setInterval(() => {
+					progress += 10;
+					document.querySelector('.progress-bar div').style.width = progress + '%';
+					if (progress >= 100) {
+						clearInterval(interval);
+						document.getElementById('loadingScreen').style.display = 'none';
+
+					}
+				}, 500);
+
 				document.getElementById('journeyButton').style.display = 'none';
-				document.querySelector('.list-container').style.display = 'block';
-				document.querySelector('.chat-input').style.display = 'flex';
-				document.querySelector('.chat-display').style.display = 'block';
+
 				var signature = document.getElementById('signature').value;
 				var projectId = document.getElementById('projectId').value;
 				if (!signature || !projectId) {
@@ -664,7 +739,12 @@
 					},
 					onPlayStream(v3Orv4) {
 						console.log("play");
+
 						console.log("v3Orv4", v3Orv4);
+						document.querySelector('.list-container').style.display = 'block';
+						document.querySelector('.chat-input').style.display = 'flex';
+						document.querySelector('.chat-display').style.display = 'block';
+						document.getElementById('loadingScreen').style.display = 'none';
 					},
 					onStopStream() {
 						console.log("stop");
@@ -711,10 +791,8 @@
 							nickname: 'AI 机器人',
 							avatar: 'https://image.yuanqilian.com:4443/76483eaf106b46d4ba47aede8efe2d76',
 							message: talkRes.content
-
 						};
 						console.log(answer);
-
 						// }
 
 						// let msgIsZero = getObjectWithMsgIdZero(chatList);
@@ -731,9 +809,18 @@
 						// 		return
 						// 	}
 						// }
-						chatList.push(answer);
-						console.log(chatList);
-						renderChat();
+						
+						// const queryId = talkRes.originalAnswer.queryId
+						// if(queryId!=taskId){
+						// 	taskId=queryId
+
+						// }else{
+						// 	initChat()
+						// }
+						
+							chatList.push(answer);
+							console.log(chatList);
+							renderChat();
 						chatDisplay.scrollTop = chatDisplay.scrollHeight;
 						// }
 						// 清空输入框
