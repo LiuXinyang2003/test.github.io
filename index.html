@@ -16,7 +16,6 @@
 				height: 100vh;
 				position: relative;
 				max-width: 500px;
-				border: 1px solid #ccc;
 				border-radius: 10px;
 				overflow: hidden;
 				display: flex;
@@ -226,6 +225,16 @@
 				margin-bottom: 20px;
 			}
 
+			#loadingScreen {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				display: none;
+				text-align: center;
+			}
+
+
 			.progress-bar {
 				width: 200px;
 				height: 20px;
@@ -248,7 +257,6 @@
 		<!-- 		<button onclick="stop1()">关闭</button> <br>
 		<div id="box" style="height='100px';color='black';">获取到的数据为</div> -->
 		<input id="signature" type="text" placeholder="签名" style="display:none;">
-		<br>
 		<input id="projectId" type="text" placeholder="项目ID" style="display:none;">
 
 		<!-- 实际数据 -->
@@ -350,9 +358,6 @@
 				// }
 			];
 
-
-			var taskId = 0;
-
 			const inputList = []
 
 
@@ -368,22 +373,45 @@
 
 			function initChat() {
 				const scrollList = document.querySelector('.scroll-list');
-				
-				mainElement =
-					`<div class="row" style="height: auto;">
-					<div class="head-friend">
-						<img class="avatar" src="">
-					</div>
-					<div>
-						<div class="AInick">就将计就计/div>
-						<div class="message msg-friend">
-							<div><span>我的任务是</span></div>
-						</div>
-					</div>
-				</div>`;
-				const chatItem = `${mainElement}`;
+				inputList.forEach((item, index) => {
+					if (!renderedMessages.includes(item.date)) {
+						//console.log(renderedMessages.includes(item.date))
+						let dateElement = '';
+						if (item.date) {
+							dateElement = `<div class="show-date">${item.date1}</div>`;
+						}
 
-				scrollList.innerHTML += chatItem;
+						let customElement = '';
+						if (item.type === 'custom') {
+							customElement = `<div class="row tips-text"></div>`;
+						}
+
+						let mainElement = '';
+						mainElement =
+							`<div class="row" style="height: auto;">
+									<div class="head-friend">
+										<img class="avatar" src="${item.avatar}">
+									</div>
+									<div>
+										<div class="AInick">${item.nickname}</div>
+										<div class="message msg-friend">
+											<div><span>添加信息</span></div>
+										</div>
+									</div>
+								</div>`;
+						const df = document.querySelector('.msg-friend div span')
+						console.log(df)
+						console.log("添加信息")
+						const chatItem = `${dateElement}${customElement}${mainElement}`;
+
+						scrollList.innerHTML += chatItem;
+						// console.log(scrollList.innerHTML)
+						console.log(chatItem)
+						renderedMessages.push(item.date);
+					}
+					//console.log(renderedMessages)
+
+				});
 
 
 			}
@@ -396,6 +424,7 @@
 
 			function renderChat() {
 				const scrollList = document.querySelector('.scroll-list');
+
 				console.log("带使用的值", chatList)
 				chatList.forEach((item, index) => {
 					if (!renderedMessages.includes(item.date)) {
@@ -809,18 +838,15 @@
 						// 		return
 						// 	}
 						// }
-						
-						// const queryId = talkRes.originalAnswer.queryId
-						// if(queryId!=taskId){
-						// 	taskId=queryId
-
-						// }else{
-						// 	initChat()
-						// }
-						
+						initChat()
+						if (state === 1) {
+							inputList.push(answer);
+							inputChat()
+						} else {
 							chatList.push(answer);
 							console.log(chatList);
-							renderChat();
+						}
+						renderChat();
 						chatDisplay.scrollTop = chatDisplay.scrollHeight;
 						// }
 						// 清空输入框
