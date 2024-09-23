@@ -264,7 +264,7 @@
 		<!-- 实际数据 -->
 
 		<div class="chat-container">
-
+			<div id='box'></div>
 
 			<button id="journeyButton" onclick="start1()">开启数字人之旅</button>
 			<div>
@@ -324,7 +324,7 @@
 				}
 				const box = document.getElementById("box");
 				if (box) {
-					box.innerHTML = '获取到的数据为' + add.user.avatarUrl;
+					box.innerHTML = '获取到的数据为' + add.projectId;
 					console.log(box.innerHTML);
 				} else {
 					console.log('未找到 id 为 box 的元素');
