@@ -264,8 +264,8 @@
 		<!-- 实际数据 -->
 
 		<div class="chat-container">
-			<div id='box'></div>
 
+			<div id="projectId"></div>
 			<button id="journeyButton" onclick="start1()">开启数字人之旅</button>
 			<div>
 				<input id="subscriptionKeyInput" value="" type="text" style="display:none;" />
@@ -317,14 +317,14 @@
 				const add = JSON.parse(paramValue)
 				window.globalVariable = add.user.avatarUrl
 				window.globalProjectId = add.projectId
-				console.log("小程序中传过来的值", add.user.avatarUrl)
+				console.log("小程序中传过来的值", add.projectId)
 				console.log("性别")
 				if (paramValue === null) {
 					paramValue = '没有获取到参数值';
 				}
 				const box = document.getElementById("box");
 				if (box) {
-					box.innerHTML = '获取到的数据为' + add.projectId;
+					box.innerHTML = '获取到的数据为' + add.user.avatarUrl;
 					console.log(box.innerHTML);
 				} else {
 					console.log('未找到 id 为 box 的元素');
