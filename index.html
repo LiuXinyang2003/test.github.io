@@ -20,12 +20,14 @@
 				overflow: hidden;
 				display: flex;
 				flex-direction: column;
+				background-image: url('https://image.yuanqilian.com:4443/5e382830f8a6a30060dcd5932f267440');
+				background-size: cover;
+				background-repeat: no-repeat;
 			}
 
 			.chat-display {
 				position: relative;
 				padding: 10px;
-				background-color: #fff;
 				height: 70vh;
 				overflow-y: scroll;
 			}
@@ -50,7 +52,6 @@
 				bottom: 0;
 				align-items: center;
 				padding: 10px;
-				background-color: #fff;
 				display: flex;
 				flex-direction: row;
 				flex-wrap: nowrap;
@@ -170,8 +171,9 @@
 
 			.message-input {
 				width: 500px;
+				height: 50px;
 				font-size: 14px;
-				line-height: 16px;
+				line-height: 15px;
 				border: solid 1px #999;
 			}
 
@@ -747,115 +749,87 @@
 
 				document.getElementById('journeyButton').style.display = 'none';
 
-				var signature = document.getElementById('signature').value;
-				var projectId = document.getElementById('projectId').value;
-				if (!signature || !projectId) {
-					alert('请输⼊签名和项目ID')
-					return
-				}
-				const Client = new window.RTCInteraction({
-					mountClass: "box",
-					signature: signature,
-					projectId: projectId,
-					timeout: 525600000,
-					// includeUI: true,
-					onError(errorMes) {
-						console.log(errorMes);
-					},
-					onInited(res) {
-						console.log("inited", res);
-						Client.startRTC()
-					},
-					onPlayStream(v3Orv4) {
-						console.log("play");
-
-						console.log("v3Orv4", v3Orv4);
-						document.querySelector('.list-container').style.display = 'block';
-						document.querySelector('.chat-input').style.display = 'flex';
-						document.querySelector('.chat-display').style.display = 'block';
-						document.getElementById('loadingScreen').style.display = 'none';
-					},
-					onStopStream() {
-						console.log("stop");
-					},
-					onTalkStart(talkRes) {
-						const nameElements = document.querySelector(".message-input");
-
-						console.log("问题的值", talkRes)
-
-						const state = talkRes.originalAnswer.state
-						console.log("状态的值", state);
-						var date = new Date();
-						var month = date.getMonth() + 1;
-						var day = date.getDate();
-						var hour = date.getHours();
-						var minu = date.getMinutes();
-						var sec = date.getSeconds();
-						var now1 = month < 10 ? '0' + month : month;
-						var now2 = day < 10 ? '0' + day : day;
-						hour = hour < 10 ? "0" + hour : hour;
-						minu = minu < 10 ? "0" + minu : minu;
-						sec = sec < 10 ? "0" + sec : sec;
-						// 假设数组名为 answers
-						// function getObjectWithMsgIdZero(answers) {
-						// 	let a = []
-						// 	for (let i = 0; i < answers.length; i++) {
-						// 		if (answers[i].msgId === 0) {
-						// 			a.push(answers[i])
-						// 		}
-						// 	}
-						// 	return a;
-						// 	// 如果没有找到 msgId 为 0 的对象，则返回 null 
-						// }
-
-						// 判断状态是否为 2
-						// if (state === 2) {
-						// let lastData = chatList[length - 1].answer
-						// if (chatList[length - 1].answer.msgId)
-						answer = {
-							date1: now1 + '-' + now2 + ' ' + hour + ':' + minu,
-							date: now1 + '-' + now2 + ' ' + hour + ':' + minu + ':' + sec,
-							type: 'custom',
-							msgId: 0,
-							nickname: 'AI 机器人',
-							avatar: 'https://image.yuanqilian.com:4443/76483eaf106b46d4ba47aede8efe2d76',
-							message: talkRes.content
-						};
-						console.log(answer);
-						// }
-
-						// let msgIsZero = getObjectWithMsgIdZero(chatList);
-
-						// let length = msgIsZero.length;
-						// console.log(length)
-						// if (length > 1) {
-						// 	console.log(msgIsZero[length - 1].message)
-						// 	const text = talkRes.originalAnswer.replyText
-						// 	console.log(text)
-						// 	const isLastDataIncludedInTalkRes = text.includes(msgIsZero[length - 1].message);
-						// 	console.log(isLastDataIncludedInTalkRes);
-						// 	if (isLastDataIncludedInTalkRes) {
-						// 		return
-						// 	}
-						// }
-						initChat()
-						if (state === 1) {
-							inputList.push(answer);
-							inputChat()
-						} else {
-							chatList.push(answer);
-							console.log(chatList);
-						}
-						renderChat();
-						chatDisplay.scrollTop = chatDisplay.scrollHeight;
-						// }
-						// 清空输入框
-						nameElements.textContent = '';
-					},
-					onTalkEnd(talkRes) {
-						console.log(talkRes);
+				setTimeout(() => {
+					var signature = document.getElementById('signature').value;
+					var projectId = document.getElementById('projectId').value;
+					if (!signature || !projectId) {
+						alert('请输⼊签名和项目ID')
+						return
 					}
-				});
+					const Client = new window.RTCInteraction({
+						mountClass: "box",
+						signature: signature,
+						projectId: projectId,
+						timeout: 525600000,
+						// includeUI: true,
+						onError(errorMes) {
+							console.log(errorMes);
+						},
+						onInited(res) {
+							console.log("inited", res);
+							Client.startRTC()
+						},
+						onPlayStream(v3Orv4) {
+							console.log("play");
+
+							console.log("v3Orv4", v3Orv4);
+							document.querySelector('.list-container').style.display = 'block';
+							document.querySelector('.chat-input').style.display = 'flex';
+							document.querySelector('.chat-display').style.display = 'block';
+							document.getElementById('loadingScreen').style.display = 'none';
+						},
+						onStopStream() {
+							console.log("stop");
+						},
+						onTalkStart(talkRes) {
+							const nameElements = document.querySelector(".message-input");
+
+							console.log("问题的值", talkRes)
+
+							const state = talkRes.originalAnswer.state
+							console.log("状态的值", state);
+							var date = new Date();
+							var month = date.getMonth() + 1;
+							var day = date.getDate();
+							var hour = date.getHours();
+							var minu = date.getMinutes();
+							var sec = date.getSeconds();
+							var now1 = month < 10 ? '0' + month : month;
+							var now2 = day < 10 ? '0' + day : day;
+							hour = hour < 10 ? "0" + hour : hour;
+							minu = minu < 10 ? "0" + minu : minu;
+							sec = sec < 10 ? "0" + sec : sec;
+							// 假设数组名为 answers
+							answer = {
+								date1: now1 + '-' + now2 + ' ' + hour + ':' + minu,
+								date: now1 + '-' + now2 + ' ' + hour + ':' + minu + ':' + sec,
+								type: 'custom',
+								msgId: 0,
+								nickname: 'AI 机器人',
+								avatar: 'https://image.yuanqilian.com:4443/76483eaf106b46d4ba47aede8efe2d76',
+								message: talkRes.content
+							};
+							console.log(answer);
+							initChat()
+							if (state === 1) {
+								inputList.push(answer);
+								inputChat()
+							} else {
+								chatList.push(answer);
+								console.log(chatList);
+							}
+							renderChat();
+							chatDisplay.scrollTop = chatDisplay.scrollHeight;
+							// }
+							// 清空输入框
+							nameElements.textContent = '';
+						},
+						onTalkEnd(talkRes) {
+							console.log(talkRes);
+						}
+					});
+				}, 1500);
+
 			}
 		</script>
 		<script>
