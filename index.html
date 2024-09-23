@@ -264,6 +264,7 @@
 		<!-- 实际数据 -->
 
 		<div class="chat-container">
+			<div id="box"></div>
 
 			<button id="journeyButton" onclick="start1()">开启数字人之旅</button>
 			<div>
@@ -760,7 +761,7 @@
 						mountClass: "box",
 						signature: signature,
 						projectId: projectId,
-						timeout: 525600000,
+						timeout: 30000,
 						// includeUI: true,
 						onError(errorMes) {
 							console.log(errorMes);
