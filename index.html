@@ -1106,18 +1106,47 @@
 					$(this).hide();
 					$('#recognizing').hide();
 					$('#start').show();
-					if (isCanStop) {
-						asr.stop();
-					}
+					asr = new window.AsrSDK({
+						// 开始识别
+						onRecognitionStart: (res) => {
+							console.log('开始识别', res);
+						},
+						// ⼀句话开始
+						onSentenceBegin: (res) => {
+							console.log('⼀句话开始', res);
+							isCanStop = true;
+							$('#end').show();
+							$('#recognizing').show();
+							// $('#connecting').hide();
+						},
+						// 识别变化时
+						onRecognitionResultChange: (res) => {
+							console.log('识别变化时', res);
+							const currentText = `${resultText}${res.result.voice_text_str}`;
+							areaDom.text(currentText);
+						},
+						// ⼀句话结束
+						onSentenceEnd: (res) => {
+							console.log('⼀句话结束', res);
+							resultText += res.result.voice_text_str;
+							areaDom.text(resultText);
+						},
+						// 识别错误
+						onError: (res) => {
+							console.log('识别失败', res)
+							$('#end').hide();
+							$('#recognizing').hide();
+							$('#start').show();
+							// $('#connecting').hide();
+						},
+						projectId: "bba09db8-7a37-11ef-9a97-9163b6a79dca"
+					});
+					 	asr.stop();
+					// if (isCanStop) {
+					// 	asr.stop();
+					// }
 				}
 				$('#end').on('click', function() {
-					// 	var element = document.getElementById('recognizeText');
-					// 	var textValue = element.textContent || element.innerText;
-					// 	console.log(textValue);	
-					// var textIdInput = document.getElementById('textId');
-					// textIdInput.value = textValue;
-					// element.textContent = ""; 
-					// element.innerHTML = "";
 					$(this).hide();
 					$('#recognizing').hide();
 					$('#start').show();
