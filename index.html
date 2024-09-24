@@ -473,9 +473,9 @@
 			voiceButton.addEventListener('mousedown', startRecording);
 			voiceButton.addEventListener('mouseup', stopRecording);
 			voiceButton.addEventListener('mouseout', stopRecording);
-			// voiceButton.addEventListener('touchstart', startRecording);
-			// voiceButton.addEventListener('touchend', stopRecording);
-			// document.addEventListener('touchmove', handleTouchMove);
+			voiceButton.addEventListener('touchstart', startRecording);
+			voiceButton.addEventListener('touchend', stopRecording);
+			document.addEventListener('touchmove', handleTouchMove);
 
 			function startRecording(event) {
 				var signature = document.getElementById('signature').value;
