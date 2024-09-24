@@ -7,7 +7,7 @@
 		<style>
 			/* 设置基本样式 */
 			body {
-				font-family: Arial, sans-serif;
+				font-family: "楷体", sans-serif;
 				margin: 0;
 				padding: 0;
 			}
@@ -28,13 +28,13 @@
 			.chat-display {
 				position: relative;
 				padding: 10px;
-				height: 70vh;
+				height: 65vh;
 				overflow-y: scroll;
 			}
 
 			.part2 {
 				position: relative;
-				height: 20vh;
+				height: 25vh;
 				display: flex;
 				flex-direction: row;
 			}
@@ -45,6 +45,8 @@
 				display: flex;
 				flex-direction: column;
 				justify-content: flex-start;
+				height: 220px;
+				border-radius: 10px;
 			}
 
 			.list-container-header {
@@ -240,6 +242,7 @@
 				border: none;
 				border-radius: 5px;
 				z-index: 999;
+				font-family: "楷体", sans-serif;
 			}
 
 
@@ -272,6 +275,16 @@
 				width: 0%;
 				transition: width 0.5s ease-in-out;
 			}
+
+			.standardQuestion {
+				font-size: 15px;
+			}
+
+			.textColor {
+			      background: linear-gradient(to right, #00008B, #ADD8E6);
+			      -webkit-background-clip: text;
+			      -webkit-text-fill-color: transparent;
+			    }
 		</style>
 	</head>
 	<body>
@@ -283,7 +296,7 @@
 		<input id="projectId" type="text" placeholder="项目ID" style="display:none;">
 
 		<!-- 实际数据 -->
-		<button onclick="stop1()">关闭</button>
+		<!-- <button onclick="stop1()">关闭</button> -->
 
 		<div class="chat-container">
 
@@ -309,7 +322,7 @@
 			</div>
 			<div class="part2">
 				<!-- AI机器人 -->
-				<div class="box" style="height: 100%;width: 100px;z-index: 999;">
+				<div class="box" style="height: 100%;width: 120px;z-index: 999;">
 				</div>
 				<!-- 推荐问题 -->
 				<div class="list-container" style="display:none;">
@@ -317,11 +330,12 @@
 						<div style="height: 100%;display: flex;flex-direction: row;align-items: center;">
 							<img style="height: 100%;display: flex;align-items: center;" background-color: #33ccff;
 								src="https://image.yuanqilian.com:4443/2f1a758018721c4d412d95ef06f15e05" alt="" />
-							<div>试试这样问我</div>
+							<div class="textColor">试试这样问我</div>
 						</div>
 						<div id="nextBatch" style="display: flex;flex-direction: row;align-items: center;">换一批</div>
 						<!-- <button id="nextBatch">换一批</button> -->
 					</div>
+					<hr />
 					<div style="display: flex;flex-direction: column;justify-content: space-between;">
 						<div id="dataContainer" class="dataContainer"></div>
 					</div>
@@ -350,7 +364,7 @@
 						<!-- <button onclick="submit()">发送</button> -->
 					</div>
 				</div>
-				<!-- 				<button class="mic-button" id="start">
+<!-- 				<button class="mic-button" id="start">
 					<div>语音输入</div>
 				</button>
 				<button class="mic-button end_btn" id="end">
@@ -460,8 +474,8 @@
 				if (event.type === 'mousedown' || (event.type === 'touchstart' && event.touches.length === 1)) {
 					isRecording = true;
 					console.log('开始录音');
-					startAsr()
 					timer = setInterval(() => {
+
 						// 模拟正在录音的状态，可以添加一些视觉反馈，比如改变按钮样式等
 						console.log('正在录音...');
 					}, 500);
@@ -471,8 +485,6 @@
 			function stopRecording() {
 				isRecording = false;
 				clearInterval(timer);
-				stopAsr()
-				stop()
 				console.log('停止录音');
 			}
 
@@ -697,7 +709,11 @@
 							for (let i = currentIndex; i < currentIndex + 5 && i < dataArray.length; i++) {
 								const itemDiv = document.createElement('div');
 								itemDiv.classList.add('item');
-								itemDiv.innerHTML = `<span>${dataArray[i].standardQuestion}</span>`;
+								itemDiv.innerHTML =
+									`<span class='standardQuestion'>${dataArray[i].standardQuestion}</span>`;
+								if (i < 4) {
+									itemDiv.innerHTML += '<hr>';
+								}
 								// 添加点击事件监听器
 								itemDiv.addEventListener('click', function() {
 									handleItemClick(dataArray[i]);
@@ -779,7 +795,8 @@
 					projectId: projectId,
 					// includeUI: true,
 				});
-				Client.endRTC()
+				Client.endRTC();
+				stop1();
 			});
 			window.addEventListener('unload', function() {
 				// 可以在这里做一些不太耗时的操作，比如记录日志等
@@ -791,8 +808,8 @@
 					projectId: projectId,
 					// includeUI: true,
 				});
-				Client.endRTC()
-				console.log(48512)
+				Client.endRTC();
+				stop1();
 			});
 			const stop1 = (e) => {
 				var signature = document.getElementById('signature').value;
@@ -843,7 +860,7 @@
 						mountClass: "box",
 						signature: signature,
 						projectId: projectId,
-						timeout: 30000,
+						timeout: 80000,
 						// includeUI: true,
 						onError(errorMes) {
 							console.log(errorMes);
@@ -975,6 +992,7 @@
 
 		<script>
 			console.log('==>AsrSDK', window.AsrSDK)
+			$(function() {
 				//let signature = '';
 				signature = document.getElementById('signature').value;
 				let subscriptionKey = 'c274a8557dd84e318f6b1ee83f84e188'
@@ -994,9 +1012,6 @@
 				})
 				let asr;
 
-				function startAsr() {
-					document.getElementById('start').click();
-				}
 				$('#start').on('click', function() {
 					window.AsrSDK.authUseMicrophone().then(res => {
 						console.log('==>授权成功', res)
@@ -1053,10 +1068,14 @@
 					// $('#connecting').show();
 					asr.start(signature);
 				});
-				function stopAsr() {
-					document.getElementById('end').click();
-				}
 				$('#end').on('click', function() {
+					// 	var element = document.getElementById('recognizeText');
+					// 	var textValue = element.textContent || element.innerText;
+					// 	console.log(textValue);	
+					// var textIdInput = document.getElementById('textId');
+					// textIdInput.value = textValue;
+					// element.textContent = ""; 
+					// element.innerHTML = "";
 					$(this).hide();
 					$('#recognizing').hide();
 					$('#start').show();
@@ -1064,6 +1083,7 @@
 						asr.stop();
 					}
 				});
+			});
 		</script>
 	</body>
 </html>
