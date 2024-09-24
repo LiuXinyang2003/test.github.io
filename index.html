@@ -1103,14 +1103,7 @@
 					asr.start(signature);
 				});
 				function stopAsr() {
-					$(this).hide();
-					$('#recognizing').hide();
-					$('#start').show();
-					
-					asr.stop();
-					// if (isCanStop) {
-					// 	asr.stop();
-					// }
+					document.getElementById('end').click();
 				}
 				$('#end').on('click', function() {
 					$(this).hide();
