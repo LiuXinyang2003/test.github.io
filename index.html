@@ -779,8 +779,6 @@
 					// includeUI: true,
 				});
 				Client.endRTC()
-				event.returnValue = '确定要离开吗？';
-				console.log(1524, '确定要离开吗？')
 			});
 			window.addEventListener('unload', function() {
 				// 可以在这里做一些不太耗时的操作，比如记录日志等
@@ -976,7 +974,7 @@
 
 		<script>
 			console.log('==>AsrSDK', window.AsrSDK)
-			$(F() {
+			$(function() {
 				//let signature = '';
 				signature = document.getElementById('signature').value;
 				let subscriptionKey = 'c274a8557dd84e318f6b1ee83f84e188'
@@ -995,7 +993,6 @@
 					return Promise.reject(error)
 				})
 				let asr;
-
 				function start2() {
 					window.AsrSDK.authUseMicrophone().then(res => {
 						console.log('==>授权成功', res)
