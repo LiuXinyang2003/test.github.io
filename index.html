@@ -355,13 +355,13 @@
 					<div id="contentArea" style="width: 80%;">
 						<div class="message-input" contenteditable="true"></div>
 					</div>
-					<!-- <button id="voiceButton">按住说话</button> -->
-					<button class="mic-button" id="start">
+					<button id="voiceButton">按住说话</button>
+					<!-- 					<button class="mic-button" id="start">
 						<div>语音</div>
 					</button>
 					<button class="mic-button end_btn" id="end">
 						<div>结束</div>
-					</button>
+					</button> -->
 					<div style="width: 10%;display: flex;align-items: center;">
 						<img onclick="submit()" style="width: 100%;"
 							src="https://image.yuanqilian.com:4443/04e1752643bd38807a7036c713ff0e7a" alt="" />
@@ -459,45 +459,46 @@
 				}
 			});
 
-			// const voiceButton = document.getElementById('voiceButton');
-			// let isRecording = false;
-			// let timer;
+			const voiceButton = document.getElementById('voiceButton');
+			let isRecording = false;
+			let timer;
 
-			// voiceButton.addEventListener('mousedown', startRecording);
-			// voiceButton.addEventListener('mouseup', stopRecording);
-			// voiceButton.addEventListener('mouseout', stopRecording);
-			// voiceButton.addEventListener('touchstart', startRecording);
-			// voiceButton.addEventListener('touchend', stopRecording);
-			// document.addEventListener('touchmove', handleTouchMove);
+			voiceButton.addEventListener('mousedown', startRecording);
+			voiceButton.addEventListener('mouseup', stopRecording);
+			voiceButton.addEventListener('mouseout', stopRecording);
+			voiceButton.addEventListener('touchstart', startRecording);
+			voiceButton.addEventListener('touchend', stopRecording);
+			document.addEventListener('touchmove', handleTouchMove);
 
-			// function startRecording(event) {
-			// 	if (event.type === 'mousedown' || (event.type === 'touchstart' && event.touches.length === 1)) {
-			// 		isRecording = true;
-			// 		console.log('开始录音');
-			// 		timer = setInterval(() => {
+			function startRecording(event) {
+				if (event.type === 'mousedown' || (event.type === 'touchstart' && event.touches.length === 1)) {
+					isRecording = true;
+					console.log('开始录音');
+					startAsr()
+					timer = setInterval(() => {
+						// 模拟正在录音的状态，可以添加一些视觉反馈，比如改变按钮样式等
+						console.log('正在录音...');
+					}, 500);
+				}
+			}
 
-			// 			// 模拟正在录音的状态，可以添加一些视觉反馈，比如改变按钮样式等
-			// 			console.log('正在录音...');
-			// 		}, 500);
-			// 	}
-			// }
+			function stopRecording() {
+				isRecording = false;
+				clearInterval(timer);
+				endAsr()
+				console.log('停止录音');
+			}
 
-			// function stopRecording() {
-			// 	isRecording = false;
-			// 	clearInterval(timer);
-			// 	console.log('停止录音');
-			// }
-
-			// function handleTouchMove(event) {
-			// 	if (isRecording && event.touches.length > 0) {
-			// 		const touch = event.touches[0];
-			// 		if (touch.clientY < event.target.getBoundingClientRect().top || touch.clientY > event.target
-			// 			.getBoundingClientRect().bottom) {
-			// 			stopRecording();
-			// 			console.log('上滑取消录音');
-			// 		}
-			// 	}
-			// }
+			function handleTouchMove(event) {
+				if (isRecording && event.touches.length > 0) {
+					const touch = event.touches[0];
+					if (touch.clientY < event.target.getBoundingClientRect().top || touch.clientY > event.target
+						.getBoundingClientRect().bottom) {
+						stopRecording();
+						console.log('上滑取消录音');
+					}
+				}
+			}
 
 
 			// 渲染函数
@@ -906,7 +907,7 @@
 								type: 'custom',
 								msgId: 0,
 								nickname: 'AI 机器人',
-								avatar: 'https://image.yuanqilian.com:4443/76483eaf106b46d4ba47aede8efe2d76',
+								avatar: 'https://image.yuanqilian.com:4443/23d420c43a469244162f6525c97b51ec',
 								message: talkRes.content
 							};
 							console.log(answer);
@@ -992,97 +993,162 @@
 
 		<script>
 			console.log('==>AsrSDK', window.AsrSDK)
-			$(function() {
-				//let signature = '';
+			//let signature = '';
+			signature = document.getElementById('signature').value;
+			let subscriptionKey = 'c274a8557dd84e318f6b1ee83f84e188'
+			var subscriptionKeyInput = document.getElementById('subscriptionKeyInput');
+			subscriptionKeyInput.value = 'c274a8557dd84e318f6b1ee83f84e188';
+			const service = axios.create({
+				baseURL: 'https://interactive-virtualhuman.xiaoice.com/openapi'
+			})
+			service.interceptors.response.use((response) => {
+				if (response.status === 200 && response.data?.code === 200) {
+					return response.data?.data
+				}
+				return Promise.reject(response.data)
+			}, (error) => {
+				console.log('错误', error)
+				return Promise.reject(error)
+			})
+			let asr;
+
+			function startAsr() {
+				window.AsrSDK.authUseMicrophone().then(res => {
+					console.log('==>授权成功', res)
+				}).catch(err => {
+					console.log('==>授权失败', err)
+				})
+
 				signature = document.getElementById('signature').value;
-				let subscriptionKey = 'c274a8557dd84e318f6b1ee83f84e188'
-				var subscriptionKeyInput = document.getElementById('subscriptionKeyInput');
-				subscriptionKeyInput.value = 'c274a8557dd84e318f6b1ee83f84e188';
-				const service = axios.create({
-					baseURL: 'https://interactive-virtualhuman.xiaoice.com/openapi'
-				})
-				service.interceptors.response.use((response) => {
-					if (response.status === 200 && response.data?.code === 200) {
-						return response.data?.data
-					}
-					return Promise.reject(response.data)
-				}, (error) => {
-					console.log('错误', error)
-					return Promise.reject(error)
-				})
-				let asr;
-
-				$('#start').on('click', function() {
-					window.AsrSDK.authUseMicrophone().then(res => {
-						console.log('==>授权成功', res)
-					}).catch(err => {
-						console.log('==>授权失败', err)
-					})
-
-					signature = document.getElementById('signature').value;
-					//console.log(signature);
-					if (!signature) {
-						alert('signature 不能为空')
-						return;
-					}
-					asr = new window.AsrSDK({
-						// 开始识别
-						onRecognitionStart: (res) => {
-							console.log('开始识别', res);
-						},
-						// ⼀句话开始
-						onSentenceBegin: (res) => {
-							console.log('⼀句话开始', res);
-							isCanStop = true;
-							$('#end').show();
-							$('#recognizing').show();
-							// $('#connecting').hide();
-						},
-						// 识别变化时
-						onRecognitionResultChange: (res) => {
-							console.log('识别变化时', res);
-							const currentText = `${resultText}${res.result.voice_text_str}`;
-							areaDom.text(currentText);
-						},
-						// ⼀句话结束
-						onSentenceEnd: (res) => {
-							console.log('⼀句话结束', res);
-							resultText += res.result.voice_text_str;
-							areaDom.text(resultText);
-						},
-						// 识别错误
-						onError: (res) => {
-							console.log('识别失败', res)
-							$('#end').hide();
-							$('#recognizing').hide();
-							$('#start').show();
-							// $('#connecting').hide();
-						},
-						projectId: "bba09db8-7a37-11ef-9a97-9163b6a79dca"
-					});
-					asr.setIsDebug(true)
-					const areaDom = $('.message-input');
-					areaDom.text('');
-					let resultText = '';
-					$(this).hide();
-					// $('#connecting').show();
-					asr.start(signature);
+				//console.log(signature);
+				if (!signature) {
+					alert('signature 不能为空')
+					return;
+				}
+				asr = new window.AsrSDK({
+					// 开始识别
+					onRecognitionStart: (res) => {
+						console.log('开始识别', res);
+					},
+					// ⼀句话开始
+					onSentenceBegin: (res) => {
+						console.log('⼀句话开始', res);
+						isCanStop = true;
+						$('#end').show();
+						$('#recognizing').show();
+						// $('#connecting').hide();
+					},
+					// 识别变化时
+					onRecognitionResultChange: (res) => {
+						console.log('识别变化时', res);
+						const currentText = `${resultText}${res.result.voice_text_str}`;
+						areaDom.text(currentText);
+					},
+					// ⼀句话结束
+					onSentenceEnd: (res) => {
+						console.log('⼀句话结束', res);
+						resultText += res.result.voice_text_str;
+						areaDom.text(resultText);
+					},
+					// 识别错误
+					onError: (res) => {
+						console.log('识别失败', res)
+						$('#end').hide();
+						$('#recognizing').hide();
+						$('#start').show();
+						// $('#connecting').hide();
+					},
+					projectId: "bba09db8-7a37-11ef-9a97-9163b6a79dca"
 				});
-				$('#end').on('click', function() {
-					// 	var element = document.getElementById('recognizeText');
-					// 	var textValue = element.textContent || element.innerText;
-					// 	console.log(textValue);	
-					// var textIdInput = document.getElementById('textId');
-					// textIdInput.value = textValue;
-					// element.textContent = ""; 
-					// element.innerHTML = "";
-					$(this).hide();
-					$('#recognizing').hide();
-					$('#start').show();
-					if (isCanStop) {
-						asr.stop();
-					}
+				asr.setIsDebug(true)
+				const areaDom = $('.message-input');
+				areaDom.text('');
+				let resultText = '';
+				$(this).hide();
+				// $('#connecting').show();
+				asr.start(signature);
+			}
+
+			$('#start').on('click', function() {
+				window.AsrSDK.authUseMicrophone().then(res => {
+					console.log('==>授权成功', res)
+				}).catch(err => {
+					console.log('==>授权失败', err)
+				})
+
+				signature = document.getElementById('signature').value;
+				//console.log(signature);
+				if (!signature) {
+					alert('signature 不能为空')
+					return;
+				}
+				asr = new window.AsrSDK({
+					// 开始识别
+					onRecognitionStart: (res) => {
+						console.log('开始识别', res);
+					},
+					// ⼀句话开始
+					onSentenceBegin: (res) => {
+						console.log('⼀句话开始', res);
+						isCanStop = true;
+						$('#end').show();
+						$('#recognizing').show();
+						// $('#connecting').hide();
+					},
+					// 识别变化时
+					onRecognitionResultChange: (res) => {
+						console.log('识别变化时', res);
+						const currentText = `${resultText}${res.result.voice_text_str}`;
+						areaDom.text(currentText);
+					},
+					// ⼀句话结束
+					onSentenceEnd: (res) => {
+						console.log('⼀句话结束', res);
+						resultText += res.result.voice_text_str;
+						areaDom.text(resultText);
+					},
+					// 识别错误
+					onError: (res) => {
+						console.log('识别失败', res)
+						$('#end').hide();
+						$('#recognizing').hide();
+						$('#start').show();
+						// $('#connecting').hide();
+					},
+					projectId: "bba09db8-7a37-11ef-9a97-9163b6a79dca"
 				});
+				asr.setIsDebug(true)
+				const areaDom = $('.message-input');
+				areaDom.text('');
+				let resultText = '';
+				$(this).hide();
+				// $('#connecting').show();
+				asr.start(signature);
+			});
+
+			function endAsr() {
+				$(this).hide();
+				$('#recognizing').hide();
+				$('#start').show();
+				if (isCanStop) {
+					asr.stop();
+				}
+			}
+
+			$('#end').on('click', function() {
+				// 	var element = document.getElementById('recognizeText');
+				// 	var textValue = element.textContent || element.innerText;
+				// 	console.log(textValue);	
+				// var textIdInput = document.getElementById('textId');
+				// textIdInput.value = textValue;
+				// element.textContent = ""; 
+				// element.innerHTML = "";
+				$(this).hide();
+				$('#recognizing').hide();
+				$('#start').show();
+				if (isCanStop) {
+					asr.stop();
+				}
 			});
 		</script>
 	</body>
