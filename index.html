@@ -357,7 +357,7 @@
 				align-items: center;justify-content: center;">
 					<div style="width: 10%">
 						<img style="width: 100%;display: flex;align-items: center;"
-							src="https://image.yuanqilian.com:4443/536146e7def2fd0f7e4f4f00bf4ce6d4" id="toggleIcon"
+							src="https://image.yuanqilian.com:4443/536146e7def2fd0f7e4f4f00bf4ce6d4"
 							alt="" />
 						<!-- <button onclick="submit()"></button> -->
 					</div>
@@ -449,39 +449,39 @@
 
 
 
-			const toggleIcon = document.getElementById('toggleIcon');
-			const contentArea = document.getElementById('contentArea');
-			let isButtonVisible = false;
+			// const toggleIcon = document.getElementById('toggleIcon');
+			// const contentArea = document.getElementById('contentArea');
+			// let isButtonVisible = false;
 
-			toggleIcon.addEventListener('click', () => {
-				if (!isButtonVisible) {
-					// 显示按钮，隐藏可编辑 div
-					const button = document.createElement('button');
-					button.textContent = '按住说话';
-					button.id = 'voiceButton'; // 设置 id 为 voiceButton
-					contentArea.innerHTML = '';
-					contentArea.appendChild(button);
-					toggleIcon.src = 'https://image.yuanqilian.com:4443/97529594d43fc114b94e01f579261890';
-					isButtonVisible = true;
-				} else {
-					// 显示可编辑 div，隐藏按钮
-					const messageInput = document.createElement('div');
-					messageInput.classList.add('message-input');
-					messageInput.contentEditable = 'true';
-					contentArea.innerHTML = '';
-					contentArea.appendChild(messageInput);
-					toggleIcon.src = 'https://image.yuanqilian.com:4443/536146e7def2fd0f7e4f4f00bf4ce6d4';
-					isButtonVisible = false;
-				}
-			});
+			// toggleIcon.addEventListener('click', () => {
+			// 	if (!isButtonVisible) {
+			// 		// 显示按钮，隐藏可编辑 div
+			// 		const button = document.createElement('button');
+			// 		button.textContent = '按住说话';
+			// 		button.id = 'voiceButton'; // 设置 id 为 voiceButton
+			// 		contentArea.innerHTML = '';
+			// 		contentArea.appendChild(button);
+			// 		toggleIcon.src = 'https://image.yuanqilian.com:4443/97529594d43fc114b94e01f579261890';
+			// 		isButtonVisible = true;
+			// 	} else {
+			// 		// 显示可编辑 div，隐藏按钮
+			// 		const messageInput = document.createElement('div');
+			// 		messageInput.classList.add('message-input');
+			// 		messageInput.contentEditable = 'true';
+			// 		contentArea.innerHTML = '';
+			// 		contentArea.appendChild(messageInput);
+			// 		toggleIcon.src = 'https://image.yuanqilian.com:4443/536146e7def2fd0f7e4f4f00bf4ce6d4';
+			// 		isButtonVisible = false;
+			// 	}
+			// });
 
 			const voiceButton = document.getElementById('voiceButton');
 			let isRecording = false;
 			let timer;
 
-			voiceButton.addEventListener('mousedown', startRecording);
-			voiceButton.addEventListener('mouseup', stopRecording);
-			voiceButton.addEventListener('mouseout', stopRecording);
+			// voiceButton.addEventListener('mousedown', startRecording);
+			// voiceButton.addEventListener('mouseup', stopRecording);
+			// voiceButton.addEventListener('mouseout', stopRecording);
 			voiceButton.addEventListener('touchstart', startRecording);
 			voiceButton.addEventListener('touchend', stopRecording);
 			document.addEventListener('touchmove', handleTouchMove);
