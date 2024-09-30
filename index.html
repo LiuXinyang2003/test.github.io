@@ -7,7 +7,7 @@
 		<style>
 			/* 设置基本样式 */
 			body {
-				font-family: "楷体", sans-serif;
+				font-family: "黑体", sans-serif;
 				margin: 0;
 				padding: 0;
 			}
@@ -294,6 +294,11 @@
 				line-height: 30px;
 			}
 			
+			.main-content{
+				height: 90%;
+				overflow-y: scroll;
+			}
+			
 		</style>
 	</head>
 	<body>
@@ -321,32 +326,33 @@
 				</div>
 			</div>
 
-
-			<!-- 对话框内容 -->
-			<div class="chat-display" style="display:none;">
-				<!-- 对话展示框将在这里 -->
-				<div class="scroll-list">
-
-				</div>
-			</div>
-			<div class="part2">
-				<!-- AI机器人 -->
-				<div class="box" style="height: 100%;width: 120px;z-index: 999;">
-				</div>
-				<!-- 推荐问题 -->
-				<div class="list-container" style="display:none;">
-					<div class="list-container-header">
-						<div style="height: 100%;display: flex;flex-direction: row;align-items: center;">
-							<img style="height: 100%;display: flex;align-items: center;" background-color: #33ccff;
-								src="https://image.yuanqilian.com:4443/2f1a758018721c4d412d95ef06f15e05" alt="" />
-							<div class="textColor">试试这样问我</div>
-						</div>
-						<div id="nextBatch" style="display: flex;flex-direction: row;align-items: center;">换一批</div>
-						<!-- <button id="nextBatch">换一批</button> -->
+			<div class="main-content">
+				<!-- 对话框内容 -->
+				<div class="chat-display" style="display:none;">
+					<!-- 对话展示框将在这里 -->
+					<div class="scroll-list">
+						
 					</div>
-					<!-- <hr /> -->
-					<div style="display: flex;flex-direction: column;justify-content: space-between;height: 90%;">
-						<div id="dataContainer" class="dataContainer"></div>
+				</div>
+				<div class="part2">
+					<!-- AI机器人 -->
+					<div class="box" style="height: 100%;width: 120px;z-index: 999;">
+					</div>
+					<!-- 推荐问题 -->
+					<div class="list-container" style="display:none;">
+						<div class="list-container-header">
+							<div style="height: 100%;display: flex;flex-direction: row;align-items: center;">
+								<img style="height: 100%;display: flex;align-items: center;" background-color: #33ccff;
+									src="https://image.yuanqilian.com:4443/2f1a758018721c4d412d95ef06f15e05" alt="" />
+								<div class="textColor">试试这样问我</div>
+							</div>
+							<div id="nextBatch" style="display: flex;flex-direction: row;align-items: center;">换一批</div>
+							<!-- <button id="nextBatch">换一批</button> -->
+						</div>
+						<!-- <hr /> -->
+						<div style="display: flex;flex-direction: column;justify-content: space-between;height: 90%;">
+							<div id="dataContainer" class="dataContainer"></div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -704,6 +710,29 @@
 					throw error;
 				}
 			}
+			
+			
+			async function getQuota() {
+				const globalSignature = await fetchSignature();
+				try {
+					await fetch('https://interactive-virtualhuman.xiaoice.com/openapi/quota/info', {
+						method: 'get',
+						headers: {
+							'signature': globalSignature,
+						},
+					})
+					.then(response => response.json())
+					.then(data => {
+						console.log("权益数据",data);
+						// if(data.data[15].remaining){
+						// 	alert('当前使用人数过多，请退出稍后再试！');
+						// }
+					})
+				} catch (error) {
+					console.error('Error:', error);
+					throw error;
+				}
+			}
 
 			async function getQuestionList() {
 				const globalSignature = await fetchSignature();
@@ -761,6 +790,8 @@
 					});
 			}
 			getQuestionList();
+			getQuota();
+			
 
 
 
@@ -886,7 +917,7 @@
 						mountClass: "box",
 						signature: signature,
 						projectId: projectId,
-						timeout: 80000,
+						timeout: 160000,
 						// includeUI: true,
 						onError(errorMes) {
 							console.log(errorMes);
@@ -904,6 +935,7 @@
 							document.querySelector('.chat-display').style.display = 'block';
 							document.getElementById('loadingScreen').style.display = 'none';
 						},
+						
 						onStopStream() {
 							console.log("stop");
 						},
@@ -931,7 +963,7 @@
 								date: now1 + '-' + now2 + ' ' + hour + ':' + minu + ':' + sec,
 								type: 'custom',
 								msgId: 0,
-								nickname: 'AI 机器人',
+								nickname: '紫玲',
 								avatar: 'https://image.yuanqilian.com:4443/23d420c43a469244162f6525c97b51ec',
 								message: talkRes.content
 							};
