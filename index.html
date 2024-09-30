@@ -611,7 +611,6 @@
 			const chatDisplay = document.querySelector('.chat-display');
 
 			// 添加事件监听器
-			// submitBtn.addEventListener('click', sendMessage);
 
 
 			// 定义函数：发送消息
@@ -688,6 +687,15 @@
 			src="https://virtualhuman-app.oss-cn-beijing.aliyuncs.com/interaction/public/js/sdk/release/xiaoiceRTC1.0.6.js"
 			type="text/javascript"></script>
 		<script>
+			const tobotytom=document.querySelector('.message-input')
+			tobotytom.addEventListener('focus',(event)=>{
+				console.log(11111)
+				const box1 = document.querySelector('.main-content');
+				box1.scrollTo(0,box1.scrollHeight-box1.clientHeight)
+				const box2 = document.querySelector('.chat-display');
+				box2.scrollTo(0,box2.scrollHeight-box2.clientHeight)
+			},true)
+		
 			// 使用fetch发送请求
 			async function fetchSignature() {
 				try {
