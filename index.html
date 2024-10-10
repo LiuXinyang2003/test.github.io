@@ -21,7 +21,7 @@
 				overflow: hidden;
 				display: flex;
 				flex-direction: column;
-				background-image: url('https://image.yuanqilian.com:4443/5e382830f8a6a30060dcd5932f267440');
+				background-image: url('https://image.yuanqilian.com:4443/f0da8b3b1fd52018857aeac3c43fa61c');
 				background-size: cover;
 				background-repeat: no-repeat;
 			}
@@ -299,12 +299,19 @@
 			.item {
 				height: 20px;
 				line-height: 20px;
-				border-bottom: 1px #f0f2f6  solid;
+				border-bottom: 1px #f0f2f6 solid;
 			}
 
 			.main-content {
 				height: 90%;
 				overflow-y: scroll;
+			}
+
+			#recording-indicator {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
 			}
 		</style>
 	</head>
@@ -322,6 +329,7 @@
 		<div class="chat-container">
 
 			<button id="journeyButton" onclick="start1()">开启数字人之旅</button>
+			<div id="recording-indicator" style="display:none;">正在录音中...</div>
 			<div>
 				<input id="subscriptionKeyInput" value="" type="text" style="display:none;" />
 			</div>
@@ -353,7 +361,9 @@
 									src="https://image.yuanqilian.com:4443/2f1a758018721c4d412d95ef06f15e05" alt="" />
 								<div class="textColor">试试这样问我</div>
 							</div>
-							<div id="nextBatch" style="display: flex;flex-direction: row;align-items: center;  opacity: 0;pointer-events: auto;">换一批</div>
+							<div id="nextBatch"
+								style="display: flex;flex-direction: row;align-items: center;  opacity: 0;pointer-events: auto;">
+								换一批</div>
 							<!-- <button id="nextBatch">换一批</button> -->
 						</div>
 						<!-- <hr /> -->
@@ -379,17 +389,17 @@
 					</div>
 					<!-- <button id="voiceButton">按住说话</button> -->
 
-										<div style="width: 10%;display: flex;align-items: center;">
+					<div style="width: 10%;display: flex;align-items: center;">
 						<img style="width: 100%;" id="start"
 							src="https://image.yuanqilian.com:4443/6b226505894df10f895955865003bea4" alt="" />
-							</div>
+					</div>
 					<!-- <img onclick="submit()" style="width: 100%;" src="https://image.yuanqilian.com:4443/0b78c852442ecad1ecc62bfac7917200" alt="" /> -->
 					<!-- <button onclick="submit()">发送</button> -->
 
-<!-- 					<button class="mic-button" id="start">
+					<!-- 					<button class="mic-button" id="start">
 						<div>语音</div>
 					</button> -->
-					<button class="mic-button end_btn" id="end">
+					<button class="mic-button end_btn" id="end" style="display: none;">
 						<div>结束</div>
 					</button>
 					<div style="width: 10%;display: flex;align-items: center;">
@@ -423,11 +433,20 @@
 				// 使用事件委托给按钮添加点击事件
 				scrollList.addEventListener('click', function(event) {
 					if (event.target && event.target.classList.contains('myButton')) {
-						console.log(9304394,sub);
+						console.log(9304394, sub);
 						window.location.href =
 							`https://brtmap.com/bb/v4/c-h5v4/main/v4.0.0/index.html#/search?sign=f7be5d9542bb412994b84d276ed3f2c0&name=${sub}`;
 					}
 				});
+				
+				scrollList.addEventListener('click', function(event) {
+					if (event.target && event.target.classList.contains('myButton1')) {
+						console.log(9304394, resultData);
+						window.location.href =
+							`https://brtmap.com/bb/v4/c-h5v4/main/v4.0.0/index.html#/map?sign=f7be5d9542bb412994b84d276ed3f2c0&page=map&type=1&poiId=${resultData.poiId}`;
+					}
+				});
+				
 				const urlParams = new URLSearchParams(window.location.search);
 				const paramValue = urlParams.get('logs');
 				const add = JSON.parse(paramValue)
@@ -510,7 +529,8 @@
 							isPreviousFromFriend = true;
 							tempMessages.push(item.message);
 							console.log(IsLoacationState)
-							if (IsLoacationState == 1) {
+							console.log(IsLoacationState1)
+							if (IsLoacationState == 1 && IsLoacationState1 != 2) {
 								mainElement = `<div class="row" style="height: auto;">
 								                <div class="head-friend">
 								                    <img class="avatar" src="${item.avatar}">
@@ -523,7 +543,22 @@
 								                    </div>
 								                </div>
 								            </div>`;
-							} else {
+							}else if(IsLoacationState1 == 2 && IsLoacationState != 1){
+								IsLoacationState1 = 0;
+								mainElement = `<div class="row" style="height: auto;">
+								                <div class="head-friend">
+								                    <img class="avatar" src="${item.avatar}">
+								                </div>
+								                <div>
+								                    <div class="AInick">${item.nickname}</div>
+								                    <div class="message msg-friend">
+								                        <div><span>${tempMessages.join(' ')}</span></div>
+														<button class="myButton1">跳转藏品</button>
+								                    </div>
+								                </div>
+								            </div>`;
+							}
+							else {
 								mainElement = `<div class="row" style="height: auto;">
 								                <div class="head-friend">
 								                    <img class="avatar" src="${item.avatar}">
@@ -576,6 +611,9 @@
 		<script>
 			let sub = ''
 			let IsLoacationState = 0;
+			let IsLoacationState1 = 0;
+			let product_name = [];
+			let resultData = '';
 			// 获取元素
 			const messageInput = document.querySelector('.message-input');
 			// const submitBtn = document.getElementById('submit-btn');
@@ -769,13 +807,41 @@
 					});
 			}
 			getQuestionList();
-			// getQuota();
-
-
-
+			
+			async function getProductList() {
+				await fetch('https://sg.jdzcnc.com:3020/api/exhibits/htmlGetProduct', {
+						method: 'get',
+					})
+					.then(response => response.json())
+					.then(data => {
+						//console.log(data.data);
+						product_name = data.data;
+					})
+					.catch(error => {
+						console.error('Error:', error);
+					});
+			}
+			
+			function findMatchingProductNameAndPoiId(item) {
+			  for (const element of product_name) {
+			    if (item.standardQuestion.includes(element.product_name)) {
+			      return { product_name: element.product_name, poiId: element.poiId };
+			    }
+			  }
+			  return null;
+			}
 
 			function handleItemClick(item) {
 				console.log(`点击了：${item.standardQuestion}`);
+				
+				resultData = findMatchingProductNameAndPoiId(item);
+				if (resultData) {
+					IsLoacationState1 = 2
+				  console.log(resultData.product_name, resultData.poiId);
+				} else {
+				  console.log('未找到匹配项');
+				}
+				
 				var signature = document.getElementById('signature').value;
 				var projectId = document.getElementById('projectId').value;
 
@@ -903,6 +969,9 @@
 				await audio();
 
 				await getQuota()
+				
+				await getProductList();
+				console.log(product_name)
 				console.log("count", count)
 				if (count > 0) {
 					document.getElementById('loadingScreen').style.display = 'block';
@@ -980,6 +1049,7 @@
 								};
 								console.log(answer);
 								console.log(talkRes.content)
+								IsLoacationState = 0
 								const originalString = talkRes.content;
 								const targetString = "具体路线如下：";
 								const index = originalString.indexOf(targetString);
@@ -1025,6 +1095,16 @@
 					return
 				} else {
 					console.log("待提交信息", element);
+				}
+				let item = {};
+				item.standardQuestion = element;
+				
+				resultData = findMatchingProductNameAndPoiId(item);
+				if (resultData) {
+					IsLoacationState1 = 2
+				  console.log(resultData.product_name, resultData.poiId);
+				} else {
+				  console.log('未找到匹配项');
 				}
 
 				var date = new Date();
@@ -1151,6 +1231,7 @@
 			}
 
 			$('#start').on('click', function() {
+				document.getElementById('recording-indicator').style.display = 'block';
 				window.AsrSDK.authUseMicrophone().then(res => {
 					console.log('==>授权成功', res)
 				}).catch(err => {
@@ -1224,6 +1305,7 @@
 				// textIdInput.value = textValue;
 				// element.textContent = ""; 
 				// element.innerHTML = "";
+				document.getElementById('recording-indicator').style.display = 'none';
 				$(this).hide();
 				$('#recognizing').hide();
 				$('#start').show();
