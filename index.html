@@ -1065,12 +1065,13 @@
 									msgId: 0,
 									nickname: '景博AI数字人-紫玲',
 									avatar: 'https://image.yuanqilian.com:4443/23d420c43a469244162f6525c97b51ec',
-									message: talkRes.content
+									message: talkRes.text
 								};
 								console.log(answer);
-								console.log(talkRes.content)
+								console.log(talkRes.text)
 								IsLoacationState = 0
-								const originalString = talkRes.content;
+								const originalString = talkRes.text;
+								console.log()
 								const targetString = "具体路线如下：";
 								const index = originalString.indexOf(targetString);
 
