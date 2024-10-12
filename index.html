@@ -989,7 +989,9 @@
 			const start1 = async (e) => {
 				//signature获取通过/openapi/signature/gen，详见API接⼊说明文档
 				await audio();
+
 				await getQuota()
+
 				await getProductList();
 				console.log(product_name)
 				console.log("count", count)
@@ -1099,9 +1101,7 @@
 						});
 					}, 1500);
 				} else {
-					// alert("网路繁忙")
-					console.log("网络错误")
-					window.loaction.herf='https://liuxinyang2003.github.io/audio.github.io/'
+					alert("网路繁忙")
 				}
 
 
