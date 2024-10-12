@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<title>数字人</title>
 		<style>
 			/* 设置基本样式 */
@@ -308,6 +308,12 @@
 			}
 
 			#recording-indicator {
+				z-index: 99;
+				background-color: #999999;
+				color: #fff;
+				border-radius: 15px;
+				padding: 10px;
+				font-size: 20px;
 				position: absolute;
 				top: 50%;
 				left: 50%;
@@ -378,7 +384,7 @@
 			<div class="chat-input" style="display:none;">
 				<!-- <input type="text" id="message-input" placeholder="请输入内容"> -->
 				<div style="display: flex;flex-direction: row;border: 1px black solid; border-radius: 10px;width: 90%;
-				align-items: center;justify-content: center;">
+				align-items: center;justify-content: center;padding-left: 15px;">
 					<!-- 					<div style="width: 10%">
 						<img style="width: 100%;display: flex;align-items: center;"
 							src="https://image.yuanqilian.com:4443/536146e7def2fd0f7e4f4f00bf4ce6d4"
@@ -438,7 +444,7 @@
 							`https://brtmap.com/bb/v4/c-h5v4/main/v4.0.0/index.html#/search?sign=f7be5d9542bb412994b84d276ed3f2c0&name=${sub}`;
 					}
 				});
-				
+
 				scrollList.addEventListener('click', function(event) {
 					if (event.target && event.target.classList.contains('myButton1')) {
 						console.log(9304394, resultData);
@@ -446,7 +452,7 @@
 							`https://brtmap.com/bb/v4/c-h5v4/main/v4.0.0/index.html#/map?sign=f7be5d9542bb412994b84d276ed3f2c0&page=map&type=1&poiId=${resultData.poiId}`;
 					}
 				});
-				
+
 				const urlParams = new URLSearchParams(window.location.search);
 				const paramValue = urlParams.get('logs');
 				const add = JSON.parse(paramValue)
@@ -530,7 +536,7 @@
 							tempMessages.push(item.message);
 							console.log(IsLoacationState)
 							console.log(IsLoacationState1)
-							if (IsLoacationState == 1 && IsLoacationState1 != 2) {
+							if (IsLoacationState == 1) {
 								mainElement = `<div class="row" style="height: auto;">
 								                <div class="head-friend">
 								                    <img class="avatar" src="${item.avatar}">
@@ -540,10 +546,11 @@
 								                    <div class="message msg-friend">
 								                        <div><span>${tempMessages.join(' ')}</span></div>
 														<button class="myButton">跳转按钮</button>
+														<button onclick="button2()">打断语音</button>
 								                    </div>
 								                </div>
 								            </div>`;
-							}else if(IsLoacationState1 == 2 && IsLoacationState != 1){
+							} else if (IsLoacationState1 == 2 && IsLoacationState != 1) {
 								IsLoacationState1 = 0;
 								mainElement = `<div class="row" style="height: auto;">
 								                <div class="head-friend">
@@ -554,11 +561,11 @@
 								                    <div class="message msg-friend">
 								                        <div><span>${tempMessages.join(' ')}</span></div>
 														<button class="myButton1">跳转藏品</button>
+														<button onclick="button2()">打断语音</button>
 								                    </div>
 								                </div>
 								            </div>`;
-							}
-							else {
+							} else {
 								mainElement = `<div class="row" style="height: auto;">
 								                <div class="head-friend">
 								                    <img class="avatar" src="${item.avatar}">
@@ -567,6 +574,7 @@
 								                    <div class="AInick">${item.nickname}</div>
 								                    <div class="message msg-friend">
 								                        <div><span>${tempMessages.join(' ')}</span></div>
+														<button onclick="button2()">打断语音</button>
 								                    </div>
 								                </div>
 								            </div>`;
@@ -807,7 +815,7 @@
 					});
 			}
 			getQuestionList();
-			
+
 			async function getProductList() {
 				await fetch('https://sg.jdzcnc.com:3020/api/exhibits/htmlGetProduct', {
 						method: 'get',
@@ -821,27 +829,30 @@
 						console.error('Error:', error);
 					});
 			}
-			
+
 			function findMatchingProductNameAndPoiId(item) {
-			  for (const element of product_name) {
-			    if (item.standardQuestion.includes(element.product_name)) {
-			      return { product_name: element.product_name, poiId: element.poiId };
-			    }
-			  }
-			  return null;
+				for (const element of product_name) {
+					if (item.standardQuestion.includes(element.product_name)) {
+						return {
+							product_name: element.product_name,
+							poiId: element.poiId
+						};
+					}
+				}
+				return null;
 			}
 
 			function handleItemClick(item) {
 				console.log(`点击了：${item.standardQuestion}`);
-				
+
 				resultData = findMatchingProductNameAndPoiId(item);
 				if (resultData) {
 					IsLoacationState1 = 2
-				  console.log(resultData.product_name, resultData.poiId);
+					console.log(resultData.product_name, resultData.poiId);
 				} else {
-				  console.log('未找到匹配项');
+					console.log('未找到匹配项');
 				}
-				
+
 				var signature = document.getElementById('signature').value;
 				var projectId = document.getElementById('projectId').value;
 
@@ -897,6 +908,7 @@
 					projectId: projectId,
 					// includeUI: true,
 				});
+				Client.breakTalking()
 				Client.endRTC();
 				stop1();
 			});
@@ -910,6 +922,7 @@
 					projectId: projectId,
 					// includeUI: true,
 				});
+				Client.breakTalking()
 				Client.endRTC();
 				stop1();
 			});
@@ -964,12 +977,19 @@
 					}
 				})
 			}
+			const button2 = (e) => {
+				const Client = new window.RTCInteraction({
+					mountClass: "box",
+					signature: signature,
+					projectId: projectId,
+					// includeUI: true,
+				});
+				Client.breakTalking();
+			}
 			const start1 = async (e) => {
 				//signature获取通过/openapi/signature/gen，详见API接⼊说明文档
 				await audio();
-
 				await getQuota()
-				
 				await getProductList();
 				console.log(product_name)
 				console.log("count", count)
@@ -1079,7 +1099,9 @@
 						});
 					}, 1500);
 				} else {
-					alert("网路繁忙")
+					// alert("网路繁忙")
+					console.log("网络错误")
+					window.loaction.herf='https://liuxinyang2003.github.io/audio.github.io/'
 				}
 
 
@@ -1098,13 +1120,13 @@
 				}
 				let item = {};
 				item.standardQuestion = element;
-				
+
 				resultData = findMatchingProductNameAndPoiId(item);
 				if (resultData) {
 					IsLoacationState1 = 2
-				  console.log(resultData.product_name, resultData.poiId);
+					console.log(resultData.product_name, resultData.poiId);
 				} else {
-				  console.log('未找到匹配项');
+					console.log('未找到匹配项');
 				}
 
 				var date = new Date();
