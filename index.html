@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<title>数字人</title>
 		<style>
 			/* 设置基本样式 */
@@ -546,6 +546,7 @@
 								                    <div class="message msg-friend">
 								                        <div><span>${tempMessages.join(' ')}</span></div>
 														<button class="myButton">跳转按钮</button>
+														<button onclick="button2()">打断语音</button>
 								                    </div>
 								                </div>
 								            </div>`;
@@ -560,6 +561,7 @@
 								                    <div class="message msg-friend">
 								                        <div><span>${tempMessages.join(' ')}</span></div>
 														<button class="myButton1">跳转藏品</button>
+														<button onclick="button2()">打断语音</button>
 								                    </div>
 								                </div>
 								            </div>`;
@@ -572,6 +574,7 @@
 								                    <div class="AInick">${item.nickname}</div>
 								                    <div class="message msg-friend">
 								                        <div><span>${tempMessages.join(' ')}</span></div>
+														<button onclick="button2()">打断语音</button>
 								                    </div>
 								                </div>
 								            </div>`;
@@ -905,6 +908,7 @@
 					projectId: projectId,
 					// includeUI: true,
 				});
+				Client.breakTalking()
 				Client.endRTC();
 				stop1();
 			});
@@ -918,6 +922,7 @@
 					projectId: projectId,
 					// includeUI: true,
 				});
+				Client.breakTalking()
 				Client.endRTC();
 				stop1();
 			});
@@ -972,12 +977,19 @@
 					}
 				})
 			}
+			const button2 = (e) => {
+				const Client = new window.RTCInteraction({
+					mountClass: "box",
+					signature: signature,
+					projectId: projectId,
+					// includeUI: true,
+				});
+				Client.breakTalking();
+			}
 			const start1 = async (e) => {
 				//signature获取通过/openapi/signature/gen，详见API接⼊说明文档
 				await audio();
-
 				await getQuota()
-
 				await getProductList();
 				console.log(product_name)
 				console.log("count", count)
@@ -1087,7 +1099,9 @@
 						});
 					}, 1500);
 				} else {
-					alert("网路繁忙")
+					// alert("网路繁忙")
+					console.log("网络错误")
+					window.loaction.herf='https://liuxinyang2003.github.io/audio.github.io/'
 				}
 
 
